@@ -1,0 +1,542 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="JuegoInglesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Estadistica">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+            <PropertyRef Name="IdNivelIngles" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdNivelIngles" Type="int" Nullable="false" />
+          <Property Name="RespuestasCorrectas" Type="int" />
+          <Property Name="ErroresTotales" Type="int" />
+          <Property Name="NumeroTotalPreguntas" Type="int" />
+        </EntityType>
+        <EntityType Name="NivelIngles">
+          <Key>
+            <PropertyRef Name="IdNivelIngles" />
+          </Key>
+          <Property Name="IdNivelIngles" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nivel" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Palabra">
+          <Key>
+            <PropertyRef Name="IdPalabra" />
+          </Key>
+          <Property Name="IdPalabra" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Palabra" Type="varchar" MaxLength="30" />
+          <Property Name="IdTema" Type="int" />
+          <Property Name="Imagen" Type="varchar(max)" />
+          <Property Name="PalabraEspanol" Type="varchar" MaxLength="50" />
+          <Property Name="SignificadoAlternativo" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Tema">
+          <Key>
+            <PropertyRef Name="IdTema" />
+          </Key>
+          <Property Name="IdTema" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tema" Type="varchar" MaxLength="100" />
+          <Property Name="IdNivelIngles" Type="int" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="ApellidoPaterno" Type="varchar" MaxLength="50" />
+          <Property Name="ApellidoMaterno" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK__Estadisti__IdNiv__2C3393D0">
+          <End Role="NivelIngles" Type="Self.NivelIngles" Multiplicity="1" />
+          <End Role="Estadistica" Type="Self.Estadistica" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NivelIngles">
+              <PropertyRef Name="IdNivelIngles" />
+            </Principal>
+            <Dependent Role="Estadistica">
+              <PropertyRef Name="IdNivelIngles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Estadisti__IdUsu__2D27B809">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Estadistica" Type="Self.Estadistica" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="Estadistica">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Palabra__IdTema__2E1BDC42">
+          <End Role="Tema" Type="Self.Tema" Multiplicity="0..1" />
+          <End Role="Palabra" Type="Self.Palabra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tema">
+              <PropertyRef Name="IdTema" />
+            </Principal>
+            <Dependent Role="Palabra">
+              <PropertyRef Name="IdTema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tema__IdNivelIng__2F10007B">
+          <End Role="NivelIngles" Type="Self.NivelIngles" Multiplicity="0..1" />
+          <End Role="Tema" Type="Self.Tema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NivelIngles">
+              <PropertyRef Name="IdNivelIngles" />
+            </Principal>
+            <Dependent Role="Tema">
+              <PropertyRef Name="IdNivelIngles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="GetStatistic" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdUsuario" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetWordsToPlay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TemaId1" Type="int" Mode="In" />
+          <Parameter Name="TemaId2" Type="int" Mode="In" />
+          <Parameter Name="TemaId3" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="TemaGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UsuarioAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="varchar" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoMaterno" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="UsuarioGetByUserName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="JuegoInglesModelStoreContainer">
+          <EntitySet Name="Estadistica" EntityType="Self.Estadistica" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NivelIngles" EntityType="Self.NivelIngles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Palabra" EntityType="Self.Palabra" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tema" EntityType="Self.Tema" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Estadisti__IdNiv__2C3393D0" Association="Self.FK__Estadisti__IdNiv__2C3393D0">
+            <End Role="NivelIngles" EntitySet="NivelIngles" />
+            <End Role="Estadistica" EntitySet="Estadistica" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Estadisti__IdUsu__2D27B809" Association="Self.FK__Estadisti__IdUsu__2D27B809">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Estadistica" EntitySet="Estadistica" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Palabra__IdTema__2E1BDC42" Association="Self.FK__Palabra__IdTema__2E1BDC42">
+            <End Role="Tema" EntitySet="Tema" />
+            <End Role="Palabra" EntitySet="Palabra" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tema__IdNivelIng__2F10007B" Association="Self.FK__Tema__IdNivelIng__2F10007B">
+            <End Role="NivelIngles" EntitySet="NivelIngles" />
+            <End Role="Tema" EntitySet="Tema" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JuegoInglesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Estadistica">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+            <PropertyRef Name="IdNivelIngles" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdNivelIngles" Type="Int32" Nullable="false" />
+          <Property Name="RespuestasCorrectas" Type="Int32" />
+          <Property Name="ErroresTotales" Type="Int32" />
+          <Property Name="NumeroTotalPreguntas" Type="Int32" />
+          <NavigationProperty Name="NivelIngle" Relationship="Self.FK__Estadisti__IdNiv__2C3393D0" FromRole="Estadistica" ToRole="NivelIngles" />
+          <NavigationProperty Name="Usuario" Relationship="JuegoInglesModel.FK__Estadisti__IdUsu__2D27B809" FromRole="Estadistica" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="NivelIngle">
+          <Key>
+            <PropertyRef Name="IdNivelIngles" />
+          </Key>
+          <Property Name="IdNivelIngles" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nivel" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Estadisticas" Relationship="Self.FK__Estadisti__IdNiv__2C3393D0" FromRole="NivelIngles" ToRole="Estadistica" />
+          <NavigationProperty Name="Temas" Relationship="Self.FK__Tema__IdNivelIng__2F10007B" FromRole="NivelIngles" ToRole="Tema" />
+        </EntityType>
+        <EntityType Name="Palabra">
+          <Key>
+            <PropertyRef Name="IdPalabra" />
+          </Key>
+          <Property Name="IdPalabra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Palabra1" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="IdTema" Type="Int32" />
+          <Property Name="Imagen" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PalabraEspanol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SignificadoAlternativo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Tema" Relationship="Self.FK__Palabra__IdTema__2E1BDC42" FromRole="Palabra" ToRole="Tema" />
+        </EntityType>
+        <EntityType Name="Tema">
+          <Key>
+            <PropertyRef Name="IdTema" />
+          </Key>
+          <Property Name="IdTema" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tema1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IdNivelIngles" Type="Int32" />
+          <NavigationProperty Name="NivelIngle" Relationship="Self.FK__Tema__IdNivelIng__2F10007B" FromRole="Tema" ToRole="NivelIngles" />
+          <NavigationProperty Name="Palabras" Relationship="Self.FK__Palabra__IdTema__2E1BDC42" FromRole="Tema" ToRole="Palabra" />
+        </EntityType>
+        <Association Name="FK__Estadisti__IdNiv__2C3393D0">
+          <End Role="NivelIngles" Type="Self.NivelIngle" Multiplicity="1" />
+          <End Role="Estadistica" Type="Self.Estadistica" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NivelIngles">
+              <PropertyRef Name="IdNivelIngles" />
+            </Principal>
+            <Dependent Role="Estadistica">
+              <PropertyRef Name="IdNivelIngles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tema__IdNivelIng__2F10007B">
+          <End Role="NivelIngles" Type="Self.NivelIngle" Multiplicity="0..1" />
+          <End Role="Tema" Type="Self.Tema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NivelIngles">
+              <PropertyRef Name="IdNivelIngles" />
+            </Principal>
+            <Dependent Role="Tema">
+              <PropertyRef Name="IdNivelIngles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Palabra__IdTema__2E1BDC42">
+          <End Role="Tema" Type="Self.Tema" Multiplicity="0..1" />
+          <End Role="Palabra" Type="Self.Palabra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tema">
+              <PropertyRef Name="IdTema" />
+            </Principal>
+            <Dependent Role="Palabra">
+              <PropertyRef Name="IdTema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JuegoInglesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Estadisticas" EntityType="Self.Estadistica" />
+          <EntitySet Name="NivelIngles" EntityType="Self.NivelIngle" />
+          <EntitySet Name="Palabras" EntityType="Self.Palabra" />
+          <EntitySet Name="Temas" EntityType="Self.Tema" />
+          <AssociationSet Name="FK__Estadisti__IdNiv__2C3393D0" Association="Self.FK__Estadisti__IdNiv__2C3393D0">
+            <End Role="NivelIngles" EntitySet="NivelIngles" />
+            <End Role="Estadistica" EntitySet="Estadisticas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tema__IdNivelIng__2F10007B" Association="Self.FK__Tema__IdNivelIng__2F10007B">
+            <End Role="NivelIngles" EntitySet="NivelIngles" />
+            <End Role="Tema" EntitySet="Temas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Palabra__IdTema__2E1BDC42" Association="Self.FK__Palabra__IdTema__2E1BDC42">
+            <End Role="Tema" EntitySet="Temas" />
+            <End Role="Palabra" EntitySet="Palabras" />
+          </AssociationSet>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(JuegoInglesModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(JuegoInglesModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="TemaGetAll" ReturnType="Collection(JuegoInglesModel.TemaGetAll_Result)" />
+          <FunctionImport Name="UsuarioGetByUserName" ReturnType="Collection(JuegoInglesModel.UsuarioGetByUserName_Result)">
+          <Parameter Name="UserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UsuarioAdd">
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="ApellidoPaterno" Mode="In" Type="String" />
+            <Parameter Name="ApellidoMaterno" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="GetStatistic" ReturnType="Collection(JuegoInglesModel.GetStatistic_Result)">
+          <Parameter Name="IdUsuario" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Usuarios" EntityType="JuegoInglesModel.Usuario" />
+          <AssociationSet Name="FK__Estadisti__IdUsu__2D27B809" Association="JuegoInglesModel.FK__Estadisti__IdUsu__2D27B809">
+            <End Role="Usuario" EntitySet="Usuarios" />
+            <End Role="Estadistica" EntitySet="Estadisticas" />
+          </AssociationSet>
+          <FunctionImport Name="GetWordsToPlay" ReturnType="Collection(JuegoInglesModel.GetWordsToPlay_Result)">
+            <Parameter Name="TemaId1" Mode="In" Type="Int32" />
+            <Parameter Name="TemaId2" Mode="In" Type="Int32" />
+            <Parameter Name="TemaId3" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="TemaGetAll_Result">
+          <Property Type="Int32" Name="IdTema" Nullable="false" />
+          <Property Type="String" Name="Tema" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="IdNivelIngles" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="UsuarioGetByUserName_Result">
+          <Property Type="Int32" Name="IdUsuario" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Nombre" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="50" />
+          <Property Type="Binary" Name="Password" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetStatistic_Result">
+          <Property Type="Int32" Name="IdUsuario" Nullable="false" />
+          <Property Type="Int32" Name="IdNivelIngles" Nullable="false" />
+          <Property Type="Int32" Name="RespuestasCorrectas" Nullable="true" />
+          <Property Type="Int32" Name="ErroresTotales" Nullable="true" />
+          <Property Type="Int32" Name="NumeroTotalPreguntas" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoPaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoMaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Estadisticas" Relationship="JuegoInglesModel.FK__Estadisti__IdUsu__2D27B809" FromRole="Usuario" ToRole="Estadistica" />
+        </EntityType>
+        <Association Name="FK__Estadisti__IdUsu__2D27B809">
+          <End Type="JuegoInglesModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="JuegoInglesModel.Estadistica" Role="Estadistica" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="Estadistica">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetWordsToPlay_Result">
+          <Property Type="String" Name="Palabra" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="PalabraEspanol" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="IdTema" Nullable="true" />
+          <Property Type="Int32" Name="IdPalabra" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JuegoInglesModelStoreContainer" CdmEntityContainer="JuegoInglesEntities">
+          <EntitySetMapping Name="Estadisticas">
+            <EntityTypeMapping TypeName="JuegoInglesModel.Estadistica">
+              <MappingFragment StoreEntitySet="Estadistica">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdNivelIngles" ColumnName="IdNivelIngles" />
+                <ScalarProperty Name="RespuestasCorrectas" ColumnName="RespuestasCorrectas" />
+                <ScalarProperty Name="ErroresTotales" ColumnName="ErroresTotales" />
+                <ScalarProperty Name="NumeroTotalPreguntas" ColumnName="NumeroTotalPreguntas" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NivelIngles">
+            <EntityTypeMapping TypeName="JuegoInglesModel.NivelIngle">
+              <MappingFragment StoreEntitySet="NivelIngles">
+                <ScalarProperty Name="IdNivelIngles" ColumnName="IdNivelIngles" />
+                <ScalarProperty Name="Nivel" ColumnName="Nivel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Palabras">
+            <EntityTypeMapping TypeName="JuegoInglesModel.Palabra">
+              <MappingFragment StoreEntitySet="Palabra">
+                <ScalarProperty Name="IdPalabra" ColumnName="IdPalabra" />
+                <ScalarProperty Name="Palabra1" ColumnName="Palabra" />
+                <ScalarProperty Name="IdTema" ColumnName="IdTema" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="PalabraEspanol" ColumnName="PalabraEspanol" />
+                <ScalarProperty Name="SignificadoAlternativo" ColumnName="SignificadoAlternativo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Temas">
+            <EntityTypeMapping TypeName="JuegoInglesModel.Tema">
+              <MappingFragment StoreEntitySet="Tema">
+                <ScalarProperty Name="IdTema" ColumnName="IdTema" />
+                <ScalarProperty Name="Tema1" ColumnName="Tema" />
+                <ScalarProperty Name="IdNivelIngles" ColumnName="IdNivelIngles" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="JuegoInglesModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="JuegoInglesModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="JuegoInglesModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="JuegoInglesModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JuegoInglesModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="JuegoInglesModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JuegoInglesModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="JuegoInglesModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="JuegoInglesModel.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="TemaGetAll" FunctionName="JuegoInglesModel.Store.TemaGetAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JuegoInglesModel.TemaGetAll_Result">
+                <ScalarProperty Name="IdTema" ColumnName="IdTema" />
+                <ScalarProperty Name="Tema" ColumnName="Tema" />
+                <ScalarProperty Name="IdNivelIngles" ColumnName="IdNivelIngles" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioGetByUserName" FunctionName="JuegoInglesModel.Store.UsuarioGetByUserName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JuegoInglesModel.UsuarioGetByUserName_Result">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UsuarioAdd" FunctionName="JuegoInglesModel.Store.UsuarioAdd" />
+          <FunctionImportMapping FunctionImportName="GetStatistic" FunctionName="JuegoInglesModel.Store.GetStatistic">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JuegoInglesModel.GetStatistic_Result">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdNivelIngles" ColumnName="IdNivelIngles" />
+                <ScalarProperty Name="RespuestasCorrectas" ColumnName="RespuestasCorrectas" />
+                <ScalarProperty Name="ErroresTotales" ColumnName="ErroresTotales" />
+                <ScalarProperty Name="NumeroTotalPreguntas" ColumnName="NumeroTotalPreguntas" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="JuegoInglesModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetWordsToPlay" FunctionName="JuegoInglesModel.Store.GetWordsToPlay">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JuegoInglesModel.GetWordsToPlay_Result">
+                <ScalarProperty Name="Palabra" ColumnName="Palabra" />
+                <ScalarProperty Name="PalabraEspanol" ColumnName="PalabraEspanol" />
+                <ScalarProperty Name="IdTema" ColumnName="IdTema" />
+                <ScalarProperty Name="IdPalabra" ColumnName="IdPalabra" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
